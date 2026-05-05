@@ -442,7 +442,6 @@ function draw() {
   ctx.globalAlpha = 1;
 
   if (state !== 'playing' && state !== 'gameover') {
-    requestAnimationFrame(loop);
     return;
   }
 
@@ -525,7 +524,11 @@ function drawPlayer(x, y) {
   // Cockpit
   ctx.fillStyle = '#00eaff';
   ctx.beginPath();
-  ctx.ellipse(0, -4, 3, 6, 0, 0, Math.PI*2);
+  ctx.save();
+  ctx.translate(0, -4);
+  ctx.scale(1, 2);
+  ctx.arc(0, 0, 3, 0, Math.PI*2);
+  ctx.restore();
   ctx.fill();
 
   ctx.restore();
@@ -571,8 +574,12 @@ function drawEnemy(e) {
 }
 
 function loop() {
-  update();
-  draw();
+  try {
+    update();
+    draw();
+  } catch (e) {
+    console.error(e);
+  }
   requestAnimationFrame(loop);
 }
 
